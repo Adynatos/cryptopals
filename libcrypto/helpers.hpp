@@ -5,7 +5,7 @@ static const std::string base64_chars =
              "abcdefghijklmnopqrstuvwxyz"
              "0123456789+/";
 
-std::string hexToByteString(const std::string hexString)
+std::string hexToByteString(const std::string& hexString)
 {
     std::string bytes;
     for(unsigned int i = 0; i < hexString.length(); i += 2)
@@ -17,7 +17,7 @@ std::string hexToByteString(const std::string hexString)
     return bytes;
 }
 
-std::string base64Encode(const std::string byteString)
+std::string base64Encode(const std::string& byteString)
 {
     std::string result;
     unsigned int neededPadding = 0;
