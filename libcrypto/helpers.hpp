@@ -45,3 +45,17 @@ std::string base64Encode(const std::string& byteString)
 
     return result;
 }
+
+std::string base64Decode(const std::string& encoded)
+{
+    std::string result;
+    for(unsigned int i = 0; i < encoded.size(); i += 4)
+    {
+        auto chunk = encoded.substr(i, 4);
+
+        result += (base64_chars.find(chunk[0]) << 2) +((base64_chars.find(chunk[1]) & 0x30) >> 4);
+        result += ((base64_chars.find(chunk[1]) & 0x0F) << 4) + ((base64_chars.find(chunk[2]) & 0x3C) >> 2);
+        result += ((base64_chars.find(chunk[2]) & 0x03) << 6) + base64_chars.find(chunk[3]);
+    }
+    return result;
+}
