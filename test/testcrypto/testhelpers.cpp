@@ -39,3 +39,9 @@ TEST(TestBase64, ShouldDecodeBase64String)
     std::string result = "I'm killing your brain like a poisonous mushroom";
     ASSERT_EQ(result, base64Decode(input));
 }
+
+TEST(TestBase64, ShouldDecodeWithPadding)
+{
+    ASSERT_EQ("Under The Sun", base64Decode("VW5kZXIgVGhlIFN1bg=="));
+    ASSERT_EQ("The North Wind", base64Decode("VGhlIE5vcnRoIFdpbmQ="));
+}
