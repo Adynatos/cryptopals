@@ -1,12 +1,14 @@
 #include <string>
 #include <algorithm>
+#include <iomanip>
+#include <sstream>
 
 static const std::string base64_chars =
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"
              "0123456789+/";
 
-std::string hexToByteString(const std::string& hexString)
+std::string hexToByte(const std::string& hexString)
 {
     std::string bytes;
     for(unsigned int i = 0; i < hexString.length(); i += 2)
@@ -16,6 +18,15 @@ std::string hexToByteString(const std::string& hexString)
         bytes.push_back(byte);
     }
     return bytes;
+}
+
+std::string byteToHex(const std::string& byteString)
+{
+    std::stringstream ss;
+    ss << std::hex;
+    for(const auto byte : byteString)
+        ss << std::setw(2) << std::setfill('0') << (int)byte;
+    return ss.str();
 }
 
 std::string base64Encode(const std::string& byteString)

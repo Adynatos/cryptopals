@@ -7,7 +7,26 @@ TEST(TestHelpers, ShouldConvertHexStringToByteString)
 {
     std::string input = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
     std::string result = "I'm killing your brain like a poisonous mushroom";
-    ASSERT_EQ(result, hexToByteString(input));
+    ASSERT_EQ(result, hexToByte(input));
+}
+
+TEST(TestHelpers, ShouldConvertSingleByteToHexString)
+{
+    std::string input = "*";
+    std::string result = "2a";
+    ASSERT_EQ(result, byteToHex(input));
+}
+
+TEST(TestHelpers, ShouldConvertByteToHexStringWithPadding)
+{
+    ASSERT_EQ("0a", byteToHex(hexToByte("0a")));
+}
+
+TEST(TestHelpers, ShouldConvertByteStringToHexString)
+{
+    std::string input = "I'm killing your brain like a poisonous mushroom";
+    std::string result = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
+    ASSERT_EQ(result, byteToHex(input));
 }
 
 TEST(TestBase64, ShouldEncodeEmptyString)
