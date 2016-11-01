@@ -29,6 +29,13 @@ std::string byteToHex(const std::string& byteString)
     return ss.str();
 }
 
+std::string fixedXor(std::string first, const std::string& second)
+{
+    for(unsigned int i = 0; i < first.size(); ++i)
+        first[i] ^= second[i];
+    return first;
+}
+
 std::string base64Encode(const std::string& byteString)
 {
     std::string result;

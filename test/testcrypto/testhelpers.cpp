@@ -29,6 +29,14 @@ TEST(TestHelpers, ShouldConvertByteStringToHexString)
     ASSERT_EQ(result, byteToHex(input));
 }
 
+TEST(TestHelpers, ShouldXorByteStrings)
+{
+    std::string first = hexToByte("1c0111001f010100061a024b53535009181c");
+    std::string second = hexToByte("686974207468652062756c6c277320657965");
+    std::string result = "746865206b696420646f6e277420706c6179";
+    ASSERT_EQ(result, byteToHex(fixedXor(first, second)));
+}
+
 TEST(TestBase64, ShouldEncodeEmptyString)
 {
     ASSERT_EQ("", base64Encode(""));
