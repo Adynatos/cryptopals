@@ -1,5 +1,6 @@
 set(libcrypto_SRCS
     helpers.hpp
+    helpers.cpp
 )
 
 # Declare the library
