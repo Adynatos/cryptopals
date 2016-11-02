@@ -36,6 +36,14 @@ std::string fixedXor(std::string first, const std::string& second)
     return first;
 }
 
+std::string singleXor(std::string input, char key)
+{
+    for(auto& chr : input)
+        chr ^= key;
+    return input;
+}
+
+
 std::string base64Encode(const std::string& byteString)
 {
     std::string result;

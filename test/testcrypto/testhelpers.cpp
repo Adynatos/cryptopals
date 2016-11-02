@@ -36,3 +36,9 @@ TEST(TestHelpers, ShouldXorByteStrings)
     std::string result = "746865206b696420646f6e277420706c6179";
     ASSERT_EQ(result, byteToHex(fixedXor(first, second)));
 }
+
+TEST(TestHelpers, ShouldXorWithSingleByte)
+{
+    std::string input = "abcdefgh";
+    ASSERT_EQ("0003020504070609", byteToHex(singleXor(input, 'a')));
+}

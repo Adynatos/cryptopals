@@ -4,7 +4,7 @@ project(cryptopals)
 
 enable_testing()
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 add_subdirectory(main)
 add_subdirectory(test)
