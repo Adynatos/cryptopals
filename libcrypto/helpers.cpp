@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include <limits>
+#include <map>
 
 static const std::string base64_chars =
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -91,4 +93,61 @@ std::string base64Decode(const std::string& encoded)
     result.erase(std::begin(result) + sizeWithoutPadding, std::end(result));
 
     return result;
+}
+
+static std::map<char, double> englishFreq = {
+    {'a', 0.08167}, {'b', 0.01492}, {'c', 0.02782}, {'d', 0.04253},
+    {'e', 0.12702}, {'f', 0.02228}, {'g', 0.02015}, {'h', 0.06094},
+    {'i', 0.06966}, {'j', 0.00153}, {'k', 0.00772}, {'l', 0.04025},
+    {'m', 0.02406}, {'n', 0.06749}, {'o', 0.07507}, {'p', 0.01929},
+    {'q', 0.00095}, {'r', 0.05987}, {'s', 0.06327}, {'t', 0.09056},
+    {'u', 0.02758}, {'v', 0.00978}, {'w', 0.02360}, {'x', 0.00150},
+    {'y', 0.01974}, {'z', 0.00074}
+};
+
+double calculateChiSquared(const std::string& input)
+{
+    std::map<char, int> count;
+    unsigned int ignored = 0;
+
+    for(unsigned int i = 0; i < input.size(); ++i)
+    {
+        char c = input[i];
+        if(c >= 65 && c <= 90)
+            count[std::tolower(c)]++;
+        else if(c >= 97 && c <= 122)
+            count[c]++;
+        else if(c >= 32 && c <= 126)
+            ignored++;
+        else if(c == 9 || c == 10 || c == 13)
+            ignored++;
+        else return std::numeric_limits<double>::max(); //Non printable ascii
+    }
+
+    auto chiSquared = 0.0;
+    auto len = input.size() - ignored;
+    for(const auto& freq : englishFreq)
+    {
+        double observed = count[freq.first];
+        double expected = len * freq.second;
+        double difference = observed - expected;
+        chiSquared += difference*difference / expected;
+    }
+    return chiSquared;
+}
+
+std::string decodeSingleXor(const std::string encoded)
+{
+    auto potentialMessages = std::vector<std::pair<double, std::string>>{};
+    for(auto c : base64_chars)
+    {
+        auto potentialDecoded = singleXor(encoded, c);
+        auto score = calculateChiSquared(potentialDecoded);
+        potentialMessages.emplace_back(score, potentialDecoded);
+    }
+
+    std::sort(std::begin(potentialMessages), std::end(potentialMessages),
+         [](auto a, auto b) { return a.first < b.first; });
+
+    return potentialMessages[0].second;
 }

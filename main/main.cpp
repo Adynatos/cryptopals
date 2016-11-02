@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
+#include <string>
 #include "helpers.hpp"
 
 
@@ -7,6 +10,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string input = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
-    cout << base64Encode(hexToByte(input)) << endl;
+    auto encoded = std::string{"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"};
+    auto decoded = decodeSingleXor(hexToByte(encoded));
+
+    cout << "Potential decoded message: '" << decoded << "'" << endl;
 }

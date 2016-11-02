@@ -42,3 +42,10 @@ TEST(TestHelpers, ShouldXorWithSingleByte)
     std::string input = "abcdefgh";
     ASSERT_EQ("0003020504070609", byteToHex(singleXor(input, 'a')));
 }
+
+TEST(TestHelpers, ShouldDecodeSingleXor)
+{
+    std::string message = "Force and fraud are in war the two cardinal virtues";
+    std::string encoded = singleXor(message, 'F');
+    ASSERT_EQ(message, decodeSingleXor(encoded));
+}
