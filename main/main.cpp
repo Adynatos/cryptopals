@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <fstream>
 #include "helpers.hpp"
 
 
@@ -10,8 +11,30 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    auto encoded = std::string{"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"};
-    auto decoded = decodeSingleXor(hexToByte(encoded));
+    ifstream infile{};
+    infile.open("4.txt");
+    if(!infile.is_open())
+    {
+        cout << "Unable to open text file" << endl;
+        return 1;
+    }
 
-    cout << "Potential decoded message: '" << decoded << "'" << endl;
+    string line;
+    vector<pair<double, string>> potential;
+    while(getline(infile, line))
+    {
+        auto decoded = decodeSingleXor(hexToByte(line));
+        auto endpos = decoded.find_last_not_of("\n \t");
+        if( string::npos != endpos )
+        {
+                decoded = decoded.substr(0, endpos+1);
+        }
+        auto score = calculateChiSquared(decoded);
+        potential.emplace_back(score, decoded);
+    }
+
+    sort(begin(potential), end(potential), [](pair<double, string>  a, pair<double, string> b)
+            { return a.first < b.first; });
+
+    cout << "Found potential message: " << potential[0].second << " with score: " << potential[0].first << endl;
 }

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <limits>
 #include <map>
+#include <iostream>
 
 static const std::string base64_chars =
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -45,6 +46,15 @@ std::string singleXor(std::string input, char key)
     return input;
 }
 
+std::string reapeatingXor(std::string input, const std::string& key)
+{
+    auto keyLenght = key.size();
+    for(int i = 0; i < input.size(); ++i)
+    {
+        input[i] ^= key[i % keyLenght];
+    }
+    return input;
+}
 
 std::string base64Encode(const std::string& byteString)
 {
@@ -102,7 +112,7 @@ static std::map<char, double> englishFreq = {
     {'m', 0.02406}, {'n', 0.06749}, {'o', 0.07507}, {'p', 0.01929},
     {'q', 0.00095}, {'r', 0.05987}, {'s', 0.06327}, {'t', 0.09056},
     {'u', 0.02758}, {'v', 0.00978}, {'w', 0.02360}, {'x', 0.00150},
-    {'y', 0.01974}, {'z', 0.00074}
+    {'y', 0.01974}, {'z', 0.00074}, {' ', 0.19182}
 };
 
 double calculateChiSquared(const std::string& input)
@@ -117,8 +127,8 @@ double calculateChiSquared(const std::string& input)
             count[std::tolower(c)]++;
         else if(c >= 97 && c <= 122)
             count[c]++;
-        else if(c >= 32 && c <= 126)
-            ignored++;
+        else if(c == ' ')
+            count[c]++;
         else if(c == 9 || c == 10 || c == 13)
             ignored++;
         else return std::numeric_limits<double>::max(); //Non printable ascii
@@ -139,7 +149,7 @@ double calculateChiSquared(const std::string& input)
 std::string decodeSingleXor(const std::string encoded)
 {
     auto potentialMessages = std::vector<std::pair<double, std::string>>{};
-    for(auto c : base64_chars)
+    for(unsigned char c = 0; c != 255; ++c)
     {
         auto potentialDecoded = singleXor(encoded, c);
         auto score = calculateChiSquared(potentialDecoded);
