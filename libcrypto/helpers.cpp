@@ -5,6 +5,7 @@
 #include <limits>
 #include <map>
 #include <iostream>
+#include <bitset>
 
 static const std::string base64_chars =
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -46,7 +47,7 @@ std::string singleXor(std::string input, char key)
     return input;
 }
 
-std::string reapeatingXor(std::string input, const std::string& key)
+std::string repeatingXor(std::string input, const std::string& key)
 {
     auto keyLenght = key.size();
     for(int i = 0; i < input.size(); ++i)
@@ -105,7 +106,7 @@ std::string base64Decode(const std::string& encoded)
     return result;
 }
 
-static std::map<char, double> englishFreq = {
+static const std::map<char, double> englishFreq = {
     {'a', 0.08167}, {'b', 0.01492}, {'c', 0.02782}, {'d', 0.04253},
     {'e', 0.12702}, {'f', 0.02228}, {'g', 0.02015}, {'h', 0.06094},
     {'i', 0.06966}, {'j', 0.00153}, {'k', 0.00772}, {'l', 0.04025},
@@ -114,6 +115,7 @@ static std::map<char, double> englishFreq = {
     {'u', 0.02758}, {'v', 0.00978}, {'w', 0.02360}, {'x', 0.00150},
     {'y', 0.01974}, {'z', 0.00074}, {' ', 0.19182}
 };
+
 
 double calculateChiSquared(const std::string& input)
 {
@@ -129,12 +131,14 @@ double calculateChiSquared(const std::string& input)
             count[c]++;
         else if(c == ' ')
             count[c]++;
+        else if(c >= 32 && c <= 126)
+            ignored++;
         else if(c == 9 || c == 10 || c == 13)
             ignored++;
         else return std::numeric_limits<double>::max(); //Non printable ascii
     }
 
-    auto chiSquared = 0.0;
+    double chiSquared = 0.0;
     auto len = input.size() - ignored;
     for(const auto& freq : englishFreq)
     {
@@ -160,4 +164,23 @@ std::string decodeSingleXor(const std::string encoded)
          [](auto a, auto b) { return a.first < b.first; });
 
     return potentialMessages[0].second;
+}
+
+char decodeSingleXorKey(const std::string encoded)
+{
+    return fixedXor(decodeSingleXor(encoded), encoded)[1];
+}
+
+//TODO think about loading ints into bitset, find how crypto libs do it
+//https://stackoverflow.com/questions/5334268/using-bitwise-operators-in-c-to-change-4-chars-to-int
+unsigned int hammingDistance(const std::string& first, const std::string& second)
+{
+    unsigned int distance = 0;
+    for(int i = 0; i < first.size(); ++i)
+    {
+        auto xored = static_cast<unsigned long>(first[i] ^ second[i]);
+        std::bitset<8> b{xored};
+        distance += b.count();
+    }
+    return distance;
 }
