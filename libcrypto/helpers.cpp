@@ -147,7 +147,7 @@ double calculateChiSquared(const std::string& input)
         double difference = observed - expected;
         chiSquared += difference*difference / expected;
     }
-    return chiSquared;
+    return chiSquared + ignored * 0.3;
 }
 
 std::string decodeSingleXor(const std::string encoded)
