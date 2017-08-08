@@ -5,10 +5,20 @@ add_executable(ex4
 add_executable(ex6
     ex6.cpp)
 
+add_executable(ex7
+    ex7.cpp)
+
 target_link_libraries(ex4
     libcrypto
 )
 
 target_link_libraries(ex6
     libcrypto
+)
+
+find_package(OpenSSL REQUIRED)
+
+target_link_libraries(ex7
+    libcrypto
+    ${OPENSSL_LIBRARIES}
 )
