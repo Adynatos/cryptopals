@@ -6,6 +6,6 @@ enable_testing()
 
 add_compile_options(-std=c++14)
 
-add_subdirectory(main)
+add_subdirectory(solutions)
 add_subdirectory(test)
 add_subdirectory(libcrypto)
