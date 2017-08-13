@@ -39,4 +39,16 @@ set_target_properties(libgmock PROPERTIES
 include_directories("${source_dir}/googletest/include"
                     "${source_dir}/googlemock/include")
 
-add_subdirectory(testcrypto)
+file(GLOB SRCS *.cpp)
+
+ADD_EXECUTABLE(testcrypto ${SRCS})
+
+TARGET_LINK_LIBRARIES(testcrypto
+    libcrypto
+    libgtest
+    libgmock
+)
+
+add_test(NAME testcrypto
+         COMMAND testcrypto)
+

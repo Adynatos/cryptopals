@@ -5,6 +5,7 @@
 #include <fstream>
 #include <map>
 #include "helpers.hpp"
+#include "base64.hpp"
 
 
 using namespace std;

@@ -1,6 +1,10 @@
 set(libcrypto_SRCS
     helpers.hpp
     helpers.cpp
+    stream_ciphers.hpp
+    stream_ciphers.cpp
+    base64.hpp
+    base64.cpp
 )
 
 # Declare the library
