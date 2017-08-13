@@ -184,3 +184,9 @@ unsigned int hammingDistance(const std::string& first, const std::string& second
     }
     return distance;
 }
+
+std::string pkcs7(std::string input, int targetSize)
+{
+    auto neededPadding = targetSize - input.size();
+    return input + std::string(neededPadding, neededPadding);
+}

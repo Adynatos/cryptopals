@@ -18,3 +18,5 @@ std::string decodeSingleXor(const std::string encoded);
 char decodeSingleXorKey(const std::string encoded);
 
 unsigned int hammingDistance(const std::string& first, const std::string& second);
+
+std::string pkcs7(std::string input, int targetSize);
