@@ -1,4 +1,5 @@
 find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 # Enable ExternalProject CMake module
 include(ExternalProject)
@@ -47,6 +48,7 @@ TARGET_LINK_LIBRARIES(testcrypto
     libcrypto
     libgtest
     libgmock
+    ${OPENSSL_LIBRARIES}
 )
 
 add_test(NAME testcrypto
