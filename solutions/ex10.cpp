@@ -14,7 +14,7 @@ using namespace::std;
 
 int main()
 {
-    ifstream infile{"7.txt"};
+    ifstream infile{"10.txt"};
     string line;
     string content;
     while(getline(infile, line))
@@ -22,13 +22,14 @@ int main()
         content += line;
     }
 
-    unsigned char key[] = "YELLOW SUBMARINE";
     auto ciphertext = base64Decode(content);
+    unsigned char key[] = "YELLOW SUBMARINE";
+    std::string iv(16, '\x0'); 
 
     OpenSSL_add_all_algorithms();
     OPENSSL_config(NULL);
 
-    cout << "Decrypted text is:\n" << aes_ecb_decrypt(ciphertext, key);
+    cout << "Decrypted text is:\n" << aes_cbc_decrypt(ciphertext, key, iv);
 
     EVP_cleanup();
     ERR_free_strings();
