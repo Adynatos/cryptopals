@@ -17,3 +17,5 @@ std::string aes_ecb_encrypt(std::string plaintext, unsigned char* key, int paddi
 
 std::string aes_cbc_encrypt(std::string, unsigned char*, const std::string&);
 std::string aes_cbc_decrypt(std::string, unsigned char*, const std::string&);
+
+std::string encryption_oracle(std::string plaintext);

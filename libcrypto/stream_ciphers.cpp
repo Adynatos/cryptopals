@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <random>
 #include "helpers.hpp"
 
 std::string pkcs7(std::string input, int neededPadding)
@@ -89,4 +90,44 @@ std::string aes_cbc_decrypt(std::string ciphertext, unsigned char* key, const st
     auto padding = int(plaintext.back());
     plaintext.resize(plaintext.size() - padding);
     return plaintext;
+}
+
+std::string random_bytes(int size)
+{
+    using random_bytes_engine = std::independent_bits_engine<
+        std::default_random_engine, CHAR_BIT, unsigned char>;
+    std::random_device r{};
+    random_bytes_engine rbe{static_cast<unsigned char>(r())};
+
+    std::string ret{};
+    std::generate_n(std::back_inserter(ret), size, std::ref(rbe));
+    return ret;
+}
+
+
+std::string encryption_oracle(std::string plaintext)
+{
+    using random_bytes_engine = std::independent_bits_engine<
+        std::default_random_engine, CHAR_BIT, unsigned char>;
+    std::random_device r{};
+    random_bytes_engine rbe{static_cast<unsigned char>(r())};
+
+    unsigned char key[16];
+    std::generate_n(key, 16, std::ref(rbe));
+
+    std::mt19937 gen(r());
+    std::uniform_int_distribution<> gen_bytes_range(5, 10);
+
+    std::string iv{random_bytes(16)};
+    std::string prefix{random_bytes(gen_bytes_range(gen))};
+    std::string suffix{random_bytes(gen_bytes_range(gen))};
+
+    std::uniform_int_distribution<> gen_if_ecb(0, 1);
+    if(gen_if_ecb(gen))
+    {
+        std::cout << "ECB" << std::endl;
+        return aes_ecb_encrypt(prefix + plaintext + suffix, key);
+    }
+    std::cout << "CBC" << std::endl;
+    return aes_cbc_encrypt(prefix + plaintext + suffix, key, iv);
 }
