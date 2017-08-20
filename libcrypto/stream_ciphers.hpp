@@ -9,6 +9,12 @@
 #include <openssl/err.h>
 
 std::string pkcs7(std::string input, int targetSize);
+std::string random_bytes(int size);
+constexpr unsigned char* as_bytes(char& str)
+{
+    return (unsigned char*) &str;
+}
+
 
 using EnvCipherCtx = std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)>;
 
