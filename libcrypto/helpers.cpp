@@ -130,3 +130,19 @@ unsigned int hammingDistance(const std::string& first, const std::string& second
     }
     return distance;
 }
+
+std::vector<std::string> split(const std::string&s, char delim)
+{
+    auto result = std::vector<std::string>{};
+    std::stringstream ss;
+    ss.str(s);
+    std::string item;
+    while(std::getline(ss, item, delim))
+    {
+        if(!item.empty())
+        {
+            result.push_back(item);
+        }
+    }
+    return result;
+}

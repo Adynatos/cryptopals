@@ -64,3 +64,15 @@ TEST(TestHelpers, ShouldCalculateHammingDistance)
     std::string second = "wokka wokka!!!";
     ASSERT_EQ(37u, hammingDistance(first, second));
 }
+
+TEST(TestHelpers, ShouldSplitStringUsingDelimiter)
+{
+    std::vector<std::string> result = { "a", "b", "c" };
+    ASSERT_EQ(result, split("a&b&c", '&'));
+}
+
+TEST(TestHelpers, SplitShouldSkipEmptyTokens)
+{
+    std::vector<std::string> result = { "a", "b", "c" };
+    ASSERT_EQ(result, split("a&b&c&", '&'));
+}

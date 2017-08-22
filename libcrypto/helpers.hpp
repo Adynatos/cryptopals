@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 std::string hexToByte(const std::string& hexString);
 std::string byteToHex(const std::string& byteString);
@@ -15,3 +16,5 @@ std::string decodeSingleXor(const std::string encoded);
 char decodeSingleXorKey(const std::string encoded);
 
 unsigned int hammingDistance(const std::string& first, const std::string& second);
+
+std::vector<std::string> split(const std::string&s, char delim);
