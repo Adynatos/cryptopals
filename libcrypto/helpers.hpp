@@ -17,4 +17,7 @@ char decodeSingleXorKey(const std::string encoded);
 
 unsigned int hammingDistance(const std::string& first, const std::string& second);
 
-std::vector<std::string> split(const std::string&s, char delim);
+std::vector<std::string> split(const std::string& s, char delim);
+
+std::string urlform_encode(const std::string& str);
+std::string urlform_decode(const std::string& str);

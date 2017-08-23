@@ -146,3 +146,33 @@ std::vector<std::string> split(const std::string&s, char delim)
     }
     return result;
 }
+
+std::string urlform_encode(const std::string& str)
+{
+    auto start = std::string{"{\n"};
+    auto end = std::string{"}"};
+    auto middle = std::string{};
+    auto parts = split(str, '&');
+    for(const auto& part : parts)
+    {
+        auto kv = split(part, '=');
+        middle += ("\t" + kv[0] + ": '" + kv[1] + "',\n"); //TODO use something like .format
+    }
+    return start + middle + end;
+}
+
+std::string urlform_decode(const std::string& str)
+{
+    auto lines = split(str, '\n');
+    auto encoded = std::string{};
+    for(int i = 1; i < lines.size() - 1; ++i)
+    {
+        auto parts = split(lines[i], ':');
+        encoded += parts[0].substr(1, parts[0].size());
+        encoded += "=";
+        encoded += parts[1].substr(2, parts[1].size()-4);
+        if(i != lines.size() - 2)
+            encoded += "&";
+    }
+    return encoded;
+}
