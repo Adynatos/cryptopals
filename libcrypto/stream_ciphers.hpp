@@ -10,9 +10,9 @@
 
 std::string pkcs7(std::string input, int targetSize);
 std::string random_bytes(int size);
-constexpr unsigned char* as_bytes(char& str)
+constexpr unsigned char* as_bytes(char& c)
 {
-    return (unsigned char*) &str;
+    return (unsigned char*) &c;
 }
 
 

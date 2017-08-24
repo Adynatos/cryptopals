@@ -147,7 +147,7 @@ std::vector<std::string> split(const std::string&s, char delim)
     return result;
 }
 
-std::string urlform_encode(const std::string& str)
+std::string urlform_decode(const std::string& str)
 {
     auto start = std::string{"{\n"};
     auto end = std::string{"}"};
@@ -161,7 +161,7 @@ std::string urlform_encode(const std::string& str)
     return start + middle + end;
 }
 
-std::string urlform_decode(const std::string& str)
+std::string urlform_encode(const std::string& str)
 {
     auto lines = split(str, '\n');
     auto encoded = std::string{};
