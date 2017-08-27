@@ -23,6 +23,9 @@ add_executable(ex12
 add_executable(ex13
     ex13.cpp)
 
+add_executable(ex14
+    ex14.cpp)
+
 find_package(OpenSSL REQUIRED)
 
 target_link_libraries(ex4
@@ -61,6 +64,11 @@ target_link_libraries(ex12
 )
 
 target_link_libraries(ex13
+    libcrypto
+    ${OPENSSL_LIBRARIES}
+)
+
+target_link_libraries(ex14
     libcrypto
     ${OPENSSL_LIBRARIES}
 )
