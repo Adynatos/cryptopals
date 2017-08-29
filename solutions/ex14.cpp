@@ -25,4 +25,51 @@ string oracle(string plaintext)
 
 int main()
 {
+    auto block_size = 16;
+    auto prefix = 0;
+    auto idx = 0;
+    for(int i = 0; i < block_size; ++i)
+    {
+        auto encrypted = oracle(string(i, 'B') + string(64, 'A'));
+        for(int j = 0; j < encrypted.size() - 64; ++j)
+        {
+            auto first = encrypted.substr(j, block_size);
+            auto second = encrypted.substr(j+16, block_size);
+            auto third = encrypted.substr(j+32, block_size);
+            auto forth = encrypted.substr(j+48, block_size);
+
+            if(first == second && second == third && third == forth)
+            {
+                cout << "prefix: " << i << " idx: " << j << endl;
+                idx = j;
+                prefix = i;
+            }
+        }
+    }
+
+    auto start = idx-prefix;
+
+    //TODO extract this into separate function
+    auto decrypted = string{};
+    while(true)
+    {
+        auto plain = string(prefix, 'B') + string(block_size - (decrypted.size() % block_size) - 1, 'A');
+        map<string, char> potential;
+        for(char c = -128; c < 127; ++c)
+        {
+            auto cipher = oracle(plain + decrypted + c);
+            auto first_block = cipher.substr(start + plain.size(), decrypted.size() + 1);
+            potential[first_block] = c;
+        }
+        auto org = oracle(plain).substr(start + plain.size(), decrypted.size() + 1);
+        auto found = potential.find(org);
+        if(potential.find(org) != potential.end())
+            decrypted += found->second;
+        else
+            break;
+    }
+
+    cout << "Decrypted: " << decrypted << endl;
+
+
 }
