@@ -7,11 +7,24 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
-TEST(TestStreamCiphers, ShouldAddPaddingWithPKSC7)
+TEST(TestPKCS7Padding, ShouldAddPaddingWithPKSC7)
 {
     std::string input = "YELLOW SU";
     std::string output = "YELLOW SU\x0B\x0B\x0B\x0B\x0B\x0B\x0B\x0B\x0B\x0B\x0B";
     ASSERT_EQ(output, pkcs7(input, 11));
+}
+
+TEST(TestPKCS7Padding, ShouldStripPadding)
+{
+    auto input = std::string{"ICE ICE BABY\x04\x04\x04\x04"};
+    auto output = std::string{"ICE ICE BABY"};
+    ASSERT_EQ(output, pkcs7_strip(input));
+}
+
+TEST(TestPKCS7Padding, ShouldRaiseExceptionWithWrongPadding)
+{
+    ASSERT_THROW(pkcs7_strip("ICE ICE BABY\x01\x04\x04\x04"), WrongPaddingException);
+    ASSERT_THROW(pkcs7_strip("ICE ICE BABY\x05\x05\x05\x05"), WrongPaddingException);
 }
 
 TEST(TestStreamCiphers, AesEbcEncryptAndDecryptShouldReturnInput)

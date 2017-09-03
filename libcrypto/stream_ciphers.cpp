@@ -12,6 +12,18 @@ std::string pkcs7(std::string input, int neededPadding)
     return input;
 }
 
+std::string pkcs7_strip(std::string input)
+{
+    auto padding = int(input.back());
+    for(int i = input.size() - padding; i < input.size(); ++i)
+    {
+        if(input[i] != input.back())
+            throw WrongPaddingException{};
+    }
+    input.resize(input.size() - padding);
+    return input;
+}
+
 std::string aes_ecb_decrypt(std::string ciphertext, unsigned char* key, int padding)
 {
     std::string decrypted{};
@@ -82,9 +94,7 @@ std::string aes_cbc_decrypt(std::string ciphertext, unsigned char* key, const st
         plaintext += fixedXor(decrypted, prev_iv);
         prev_iv = cipher_block;
     }
-    auto padding = int(plaintext.back());
-    plaintext.resize(plaintext.size() - padding);
-    return plaintext;
+    return pkcs7_strip(plaintext);
 }
 
 std::string random_bytes(int size)
