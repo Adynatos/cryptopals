@@ -15,6 +15,8 @@ std::string pkcs7(std::string input, int neededPadding)
 std::string pkcs7_strip(std::string input)
 {
     auto padding = int(input.back());
+    if(padding <= 0 || padding > 16 )
+        throw WrongPaddingException{};
     for(int i = input.size() - padding; i < input.size(); ++i)
     {
         if(input[i] != input.back())
@@ -33,7 +35,8 @@ std::string aes_ecb_decrypt(std::string ciphertext, unsigned char* key, int padd
     EnvCipherCtx ctx{EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free};
 
     EVP_DecryptInit_ex(ctx.get(), EVP_aes_128_ecb(), NULL, key, NULL);
-    EVP_CIPHER_CTX_set_padding(ctx.get(), padding);
+    EVP_CIPHER_CTX_set_padding(ctx.get(), false);
+ 
     EVP_DecryptUpdate(ctx.get(), as_bytes(decrypted[0]), &out_len1,
                       as_bytes(ciphertext[0]), ciphertext.size());
 
@@ -53,7 +56,8 @@ std::string aes_ecb_encrypt(std::string plaintext, unsigned char* key, int paddi
     EnvCipherCtx ctx{EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free};
 
     EVP_EncryptInit_ex(ctx.get(), EVP_aes_128_ecb(), NULL, key, NULL);
-    EVP_CIPHER_CTX_set_padding(ctx.get(), padding);
+    EVP_CIPHER_CTX_set_padding(ctx.get(), false);
+
     EVP_EncryptUpdate(ctx.get(), as_bytes(encrypted[0]), &out_len1,
                       as_bytes(plaintext[0]), plaintext.size());
 
@@ -70,7 +74,10 @@ std::string aes_cbc_encrypt(std::string plaintext, unsigned char* key, const std
     std::string part{iv};
     std::string encrypted{};
 
-    plaintext = pkcs7(plaintext, block_size - (plaintext.size() % block_size));
+    int pad = block_size - (plaintext.size() % block_size);
+    if(pad == 16)
+        pad = 0;
+    plaintext = pkcs7(plaintext, pad);
 
     for(int i = 0; i < plaintext.size(); i += block_size)
     {
